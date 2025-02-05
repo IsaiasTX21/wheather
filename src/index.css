@@ -1,0 +1,44 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#icon {
+    width: 120px;
+}
+
+#icon2 {
+    margin-right: 40px;
+}
+
+.painel {
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white;
+    font-weight: bold;
+    border: 3px solid #f1f1f1;
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    padding: 20px;
+    text-align: center;
+
+}
+
+@media screen and (width < 330px) {
+    input {
+        width: 150px !important;
+    }
+}
+
+@media screen and (width > 768px) {
+    input {
+        width: 240px !important;
+    }
+
+    button {
+        width: 100px;
+    }
+}
