@@ -14,16 +14,19 @@ function City() {
         const country = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cities}&appid=be00bdbb8614d81ed01492b2dee1184e&units=metric`)
             .then((data) => data.json())
             .then((data) => setcontries(data))
+            
     }
+
+    console.log(countries)
 
     async function fetchImage() {
         const response = await fetch(` https://api.unsplash.com/search/photos?query=${cities}s&client_id=8I0zAPLYTXryJZpUPB1imQz0BeT1blruWMqgdhuUPIE`)
         const objects = await response.json()
-        setImageUrl(objects.results[5])
-        console.log(objects)
+        setImageUrl(objects.results[1])
+     
 
     }
-    const background = ImageUrl ? ImageUrl.urls.regular : "https://images.unsplash.com/photo-1583978618388-c9726a050ac1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDUzNzV8MHwxfHNlYXJjaHw0fHxyaW8lMjBkZSUyMGphbmVpcm9zfGVufDB8fHx8MTczODcxOTM2Nnww&ixlib=rb-4.0.3&q=80&w=1080"
+    const background = ImageUrl ? ImageUrl.urls.regular : 'https://i.ibb.co/TDG65KFs/cloud-4217442-1920.jpg'
     const icon = countries.weather ? countries.weather[0].icon : ""
 
     useEffect(() => {
