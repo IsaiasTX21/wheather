@@ -2,65 +2,142 @@ import './index.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import backgroundwhether from "./cloud-4217442_1920.jpg";
+import umidities from "./water_13136955.png"
 
 function City() {
-    const [countries, setcontries] = useState("")
-    const [ImageUrl, setImageUrl] = useState("")
-    const navigate = useNavigate()
-    const { cities } = useParams()
-    const [search, setseach] = useState("")
+    const [countries, setCountries] = useState();
+    const [imageUrl, setImageUrl] = useState(backgroundwhether);
+    const [loader, setLoader] = useState(false);
+    const [imgLoaded, setImgLoaded] = useState(false);
+    const [search, setSearch] = useState("");
 
+    const navigate = useNavigate();
+    const { cities } = useParams();
+
+    // Função para buscar dados do clima
     async function weather() {
-        const country = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cities}&appid=be00bdbb8614d81ed01492b2dee1184e&units=metric`)
-            .then((data) => data.json())
-            .then((data) => setcontries(data))
-            
+        setLoader(true);
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cities}&appid=be00bdbb8614d81ed01492b2dee1184e&units=metric`);
+        const data = await response.json();
+
+        if (response.ok) {
+            setCountries(data);
+        } else {
+            setCountries(null); // erro ou cidade não encontrada 
+        }
+
+        setTimeout(() => {
+            setLoader(false);
+        }, 1000);
     }
 
-    console.log(countries)
-
+    // Função para buscar imagem no Unsplash
     async function fetchImage() {
-        const response = await fetch(` https://api.unsplash.com/search/photos?query=${cities}s&client_id=8I0zAPLYTXryJZpUPB1imQz0BeT1blruWMqgdhuUPIE`)
-        const objects = await response.json()
-        setImageUrl(objects.results[1])
-     
+        const response = await fetch(`https://api.unsplash.com/search/photos?query=${cities}&client_id=8I0zAPLYTXryJZpUPB1imQz0BeT1blruWMqgdhuUPIE`);
+        const objects = await response.json();
+        const imageObj = objects.results[1]; // pega a segunda imagem
 
+        if (imageObj?.urls?.regular) {
+            setTimeout(() => {
+                setImageUrl(imageObj.urls.regular);
+            }, 1000);
+
+            const img = new Image();
+            img.src = imageObj.urls.regular;
+            img.onload = () => {
+                setImgLoaded(true);
+            };
+        } else {
+            setImgLoaded(false);
+        }
     }
-    const background = ImageUrl ? ImageUrl.urls.regular : 'https://i.ibb.co/TDG65KFs/cloud-4217442-1920.jpg'
-    const icon = countries.weather ? countries.weather[0].icon : ""
 
     useEffect(() => {
-        weather()
-        fetchImage()
-    }, [cities])
+        weather();
+        fetchImage();
+    }, [cities]);
 
+    const handleSearch = () => {
+        if (search.trim()) {
+            navigate(`/city/${search}`);
+        }
+    };
 
-    function city() {
-        navigate(`/city/${search}`)
+    const background = imgLoaded ? imageUrl : backgroundwhether;
+    const icon = countries?.weather ? countries.weather[0].icon : "";
+
+    if (loader) {
+        return (
+            <div style={{ backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundImage: `url(${imageUrl})` }} className='vh-100 d-flex justify-content-center align-items-center'>
+                <div className="spinner-border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        );
     }
 
     return (
+        <div
+            id="back"
+            style={{
+                height: "100vh",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
+                backgroundImage: `url(${background})`
+            }}
+        >
+            <div className='painel row d-flex container m-auto'>
+                <div className='position-relative text-center'>
+                    <input
+                        onChange={(e) => setSearch(e.target.value)}
+                        style={{ height: "37px", width: "200px", display: "inline" }}
+                        className='form-control m-auto mt-3'
+                        placeholder="Search city..."
+                    />
+                    <button
+                        onClick={handleSearch}
+                        className='btn btn-primary mb-1'
+                    >
+                        Search
+                    </button>
 
-        <>
-            <div id='back' style={{ height: "100vh", backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundImage: `url(${background})` }} >
-                <div className=' painel row  d-flex container  m-auto'>
-                    <div className='position-relative text-center'>
-                        <input onChange={(e) => setseach(e.target.value)} style={{ position: "relative", height: "37px", width: "200px", display: "inline" }} className='form-control m-auto mt-5'></input>
-                        <button onClick={city} style={{ Width: "300px", position: "relative", bottom: "2px" }} className='btn btn-primary'>search</button>
+                    {countries === null && (
+                        <div className="alert alert-danger text-center mt-4">
+                            Cidade não encontrada. Tente novamente.
+                        </div>
+                    )}
 
-                        <br />
+                    {countries && (
+                        <>
+                            <div className='display-6 mt-4'>
+                                <img id="icon" src={`http://openweathermap.org/img/wn/${icon}.png`} alt="Weather Icon" />
+                                {countries.main ? ` ${countries.main.temp}ºC` : "Waiting"}
+                            </div>
 
-                        <p className='display-6'> <img id="icon" src={`http://openweathermap.org/img/wn/${icon}.png`} alt="Weather Icon" /> {countries.main ? countries.main.temp : "Waiting"}ºC</p>
-                        <p className='display-6'> <img id='icon2' src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAACXBIWXMAAAsTAAALEwEAmpwYAAAE2UlEQVR4nO2czW8bRRiHB0qrig8JqESBQzyDKhDhyB/AEcS1FDhQIjyrSlxB0EtFBIITohTimTRwQEiccgAJ7YYIDqUCFD7M+oAru/XyJQGVaVGTGe/EhUiLJrVD1BInduyddybzSO8pm2jmfXZm7N2fgpDH4/F4PB6Px+PxDJnKmcYDca3xZlxPqnE9aXWqGteS4/G5c+O+4SOiWq3uievJVKXWWKnUk+x/q6Z/1nirXC7v9iKG3PxKrfHZho2/phqfeglDZPXO33Lzk66EE8Mcw47e83tuOxvXP9+fPXu/6fFbj76TB2h+piuuJW+YHr/1VGrJmYEF1Bs/mB6/9cT1RA4uIBGmx289gza/0ikEnCBSTxdDdRhBxWUBdH75AA1TuVrzywcQRFwVMDmZXR9E6ekgUpkuGqVfHZrNdiFouCqARur5bvPX1XMIGps1+MQHH/YsBJDiJ+37aJSqqwXQMG0/M9eG9TzLOQFZdt36refaSk/raxAUXBNQDNXhjZvfXQnqKQQFlwQc+Ti7MYjU75sJ0NfoaxEEXDqEaaRe3ELzr1SoXkAQcEXAxKlsL43Uha0K0Nfq3zE9bmcEFLew94M8C1wRQEM1N4CAOdPjduYQpqFq9isgCNWfpsftjIAgSkX/AtIl0+N2R0Co4r4FRKpsetzOCKChemmALeiY6XG7cwjPL94ehOqvPgRcnPjo0q2mx+2MAA2daz0aROnK5s1PV2jYegRBwCUBaxJ6r4SLYJrvogDNs+HibZ0zoXzl01EqglB9p/d8ENvOegiXWa+65eH3exbyeAFWA30FBNBTDS4LoDakGkYtYLNCOz3V4KoAakuqwUUBRZtSDc4JyCxLNbh2CBdtSzW4JOCIjakGlwRQG1MNrgiYsDXV4MohXLQ11eCKAGprqsEhAU0rUw2uCAhsTTW4cggHtqYaXBFAbU01OCNg3tJUgysCrE01uHIIW5tqcE2AdamGgZnNdmEujm5XAObiqP5bpqdjFYVS607C5MJ2m0+6xeTC2EzrLtPzsgIytXQvYfLnoTWfd1YCE78WmAD3/4NApSr0XTqK5pO1lSB+wyVVQEAAlap4aDK7gXD59ciaz9ckxOOz2R6jk4WYqsBcHBt583l3O5KvIcOASlWsbj1cqPwEiL/H3r5EjEwWYqoCMzGVV/PJf/UOMgG0VEXhvWwvZnLRgIDWeKl5M8oZcKkKwsVBA83PdBW4fDK3iUJNVWAmSqYEYC4ZyhGQqYpcPnryDQQw+U0uk4ScqiBcnDclgDDxB8oJsKkKwsSyQQHLKCfApiowE5fNnQGijXICbKoCM3nB3BkgmignwKYqMBffmtuC5ALKCbCpCsLljDEBXE6jnACbqsBMPmFMQEk8hnICbKpi/+vnb8Jcyp3wKIJCTVWY+DaMmeTIACBTF
-                        eRduR8zKXJrPhdtk2/GQKYqMBeTOa6Al41MEjIPzmS7CZefj/7ul19AeCUJkrunlvYRLn8cnQDxyz1c3mF6nqAZmxbjulEjEPATxFgK3JXAxKmhbTtMfqkPetP
-                        zsgq9T2MuX93OwzrMRZsw+Yrf87eBTi8QJk/282UNcyn153xIISzrWf3GPC0f189v9Fs0/SRTr45ONTtv1qYJl4f0tabH6/F4PB6Px+PxeDwoJ/4FX+/E2waV3fUAAAAASUVORK5CYII=" alt="dew-point"></img> {countries.main ? countries.main.humidity : "Waiting"}%</p>
-                        <p className='display-6'> <img src="https://img.icons8.com/?size=100&id=pLiaaoa41R9n&format=png&color=000000"></img>  {countries.main ? Number(countries.wind.speed * 3, 6).toFixed(2) : "Waiting"}Km/h</p>
+                            <div className='display-6'>
+                                <img
+                                    id='icon2'
+                                    src={umidities}
+                                    alt="Humidity"
+                                />
+                                {countries.main ? ` ${countries.main.humidity}%` : "Waiting"}
+                            </div>
 
-                    </div>
+                            <div className='display-6  mt-4'>
+                                <img
+                                   id='icon3'
+                                    src="https://img.icons8.com/?size=100&id=pLiaaoa41R9n&format=png&color=000000"
+                                    alt="Wind Speed"
+                                />
+                                {countries.wind ? ` ${(countries.wind.speed * 3.6).toFixed(2)} Km/h` : "Waiting"}
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
-        </>
-    )
+        </div>
+    );
 }
 
-export default City
+export default City;
