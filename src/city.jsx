@@ -17,7 +17,7 @@ function City() {
 
     // Função para buscar dados do clima
     async function weather() {
-        setLoader(true);
+        
         const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cities}&appid=be00bdbb8614d81ed01492b2dee1184e&units=metric`);
         const data = await response.json();
 
@@ -110,27 +110,27 @@ function City() {
 
                     {countries && (
                         <>
-                            <div className='display-6 mt-4'>
+                            <div >
                                 <img id="icon" src={`http://openweathermap.org/img/wn/${icon}.png`} alt="Weather Icon" />
-                                {countries.main ? ` ${countries.main.temp}ºC` : "Waiting"}
+                               <span  style={{position:"relative", left:"30px", fontSize: "24px"}}> {countries.main ? ` ${countries.main.temp}ºC` : "Waiting"} </span>
                             </div>
 
-                            <div className='display-6'>
+                            <div >
                                 <img
                                     id='icon2'
                                     src={umidities}
                                     alt="Humidity"
                                 />
-                                {countries.main ? ` ${countries.main.humidity}%` : "Waiting"}
+                               <span  style={{position:"relative", left:"50px",fontSize: "24px"}} >  {countries.main ? ` ${countries.main.humidity}%` : "Waiting"} </span>
                             </div>
 
-                            <div className='display-6  mt-4'>
+                            <div className=' mt-4'>
                                 <img
                                    id='icon3'
                                     src="https://img.icons8.com/?size=100&id=pLiaaoa41R9n&format=png&color=000000"
                                     alt="Wind Speed"
                                 />
-                                {countries.wind ? ` ${(countries.wind.speed * 3.6).toFixed(2)} Km/h` : "Waiting"}
+                               <span  style={{position:"relative", left:"50px",fontSize: "24px"}}>  {countries.wind ? ` ${(countries.wind.speed * 3.6).toFixed(2)} Km/h` : "Waiting"} </span>
                             </div>
                         </>
                     )}
