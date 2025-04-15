@@ -20,7 +20,7 @@ function City() {
         
         const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cities}&appid=be00bdbb8614d81ed01492b2dee1184e&units=metric`);
         const data = await response.json();
-
+           setLoader(true)
         if (response.ok) {
             setCountries(data);
         } else {
@@ -112,7 +112,7 @@ function City() {
                         <>
                             <div >
                                 <img id="icon" src={`http://openweathermap.org/img/wn/${icon}.png`} alt="Weather Icon" />
-                               <span  style={{position:"relative", left:"30px", fontSize: "24px"}}> {countries.main ? ` ${countries.main.temp}ºC` : "Waiting"} </span>
+                               <span  style={{position:"relative", left:"30px", fontSize: "24px"}}> {countries.main ? ` ${(countries.main.temp).toFixed(1)  }ºC` : "Waiting"} </span>
                             </div>
 
                             <div >

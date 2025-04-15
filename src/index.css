@@ -5,6 +5,8 @@
 
 #icon {
     width: 120px;
+    position: relative;
+    left:10px;
 
 
 }
