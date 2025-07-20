@@ -1,10 +1,9 @@
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import { Spin } from 'antd';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-
-import world from '../src/assets/world.png';
+import world from '../src/assets/worlds.png';
 import umidities from '../src/assets/rain.png';
 
 function City() {
@@ -12,19 +11,20 @@ function City() {
   const navigate = useNavigate();
 
   const [weatherData, setWeatherData] = useState(null);
-  const [background, setBackground] = useState(world);
+  const [background, setBackground] = useState();
   const [imgReady, setImgReady] = useState(false);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
-  /* --------------- Fetch – Clima --------------- */
+
   const fetchWeather = async () => {
     try {
       const res = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?q=${cities}&appid=be00bdbb8614d81ed01492b2dee1184e&units=metric`
       );
       const data = await res.json();
-      setWeatherData(res.ok ? data : null);
+      setWeatherData(data);
+      
     } catch {
       setWeatherData(null);
     } finally {
@@ -32,7 +32,7 @@ function City() {
     }
   };
 
-  /* --------------- Fetch – Imagem --------------- */
+  
   const fetchImage = async () => {
     try {
       const res = await fetch(
@@ -58,21 +58,22 @@ function City() {
     }
   };
 
-  /* --------------- Efeito principal --------------- */
+
   useEffect(() => {
     setLoading(true);
     fetchWeather();
     fetchImage();
+
   }, [cities]);
 
-  /* --------------- Handlers --------------- */
+
   const handleSearch = () => {
     if (search.trim()) navigate(`/city/${search.trim()}`);
   };
 
   const iconCode = weatherData?.weather?.[0]?.icon;
 
-  /* --------------- Render --------------- */
+
   return (
     <div
       className="photoback d-flex justify-content-center align-items-center position-relative"
@@ -85,14 +86,14 @@ function City() {
       }}
     >
       {loading && (
-        <div className="spinner-border position-absolute top-50 start-50 translate-middle" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
+       <div style={{ height: "100vh", position: "relative", backgroundColor: "black" }}>
+        <Spin style={{ position: "absolute", left: "50%", top: "50%" }} size="large" />
+      </div>
       )}
 
       {!loading && (
         <div className="painel">
-          {/* ----- barra de busca interna ----- */}
+      
 
           <div style={{display: 'flex' }}>
 
@@ -107,14 +108,14 @@ function City() {
           </button>
           </div>
 
-          {/* ----- caso a cidade não exista ----- */}
+    
           {weatherData === null && (
             <div className="alert alert-danger text-center mt-2">
               Cidade não encontrada. Tente novamente.
             </div>
           )}
 
-          {/* ----- dados climáticos ----- */}
+
           {weatherData && (
             <>
               <div>

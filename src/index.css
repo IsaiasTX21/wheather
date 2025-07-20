@@ -1,17 +1,19 @@
-/* Reset */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
 }
 
 .photoback {
-  background-image: url('../src/assets/world.png');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
 }
-
+.ant-spin-container ant-spin-blur {
+  background-color: aqua !important;
+}
 
 #icon {
   width: 120px;
@@ -31,7 +33,6 @@
   left: 30px;
 }
 
-/* Painel flutuante */
 .painel {
   background-color: rgba(0, 0, 0, 0.4);
   color: white;
@@ -50,14 +51,10 @@
 
 @media (min-width: 768px) {
 
-
   button {
     width: 100px;
-  }
+  }}
 
-}
-
-/* Pequenas telas */
 @media (max-width: 330px) {
   .responsive-input {
     width: 50px;
