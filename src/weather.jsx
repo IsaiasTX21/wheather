@@ -28,7 +28,7 @@ useEffect(() => {
 
    return(
 <>
-{!load ? <div
+{load ? <div
         className="photoback position-relative"
         style={{
           backgroundColor: "black",
