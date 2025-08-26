@@ -28,7 +28,7 @@ useEffect(() => {
 
    return(
 <>
-{load ? <div
+{!load ? <div
         className="photoback position-relative"
         style={{
           backgroundColor: "black",
@@ -41,7 +41,7 @@ useEffect(() => {
     <div className="painel">
           <input
             type="text"
-            placeholder="New York, Rio de Janeiro..."
+            placeholder="Copacabana, Paris, New York... "
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && goToCity()}
             className="form-control m-auto"
@@ -51,7 +51,7 @@ useEffect(() => {
           </button>
         </div>
          </div> : <div style={{ height: "100vh", position: "relative", backgroundColor: "black" }}>
-        <Spin style={{ position: "absolute", left: "50%", top: "50%" }} size="large" />
+        <Spin style={{ position: "absolute", left: "calc(50% - 16px)", top: "calc(50% - 16px)"}} size="large" />
       </div> }</>
    )
 
