@@ -32,6 +32,7 @@ function City() {
     }
   };
 
+<<<<<<< HEAD
   
   const fetchImage = async () => {
     try {
@@ -40,6 +41,13 @@ function City() {
       );
       const { results } = await res.json();
       const best = results[0];
+=======
+    async function fetchImage() {
+        const response = await fetch(` https://api.unsplash.com/search/photos?query=${cities}s&client_id=8I0zAPLYTXryJZpUPB1imQz0BeT1blruWMqgdhuUPIE`)
+        const objects = await response.json()
+        setImageUrl(objects.results[1])
+        console.log(objects)
+>>>>>>> 83f0d26bf6fa0b077f62d0891f2199d33a443c65
 
       if (best?.urls?.regular) {
         const preload = new Image();

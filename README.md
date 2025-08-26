@@ -4,9 +4,10 @@ Este é um projeto simples de previsão do tempo que utiliza uma API de clima (W
 
 ## 🔧 Tecnologias utilizadas
 
-- HTML 5, CSS 3, JavaScript, React e Boostrap 5.
-- [OpenWeatherMap API](https://openweathermap.org/api)
-- [Unleash api photos](https://unsplash.com/developers)
+> **HTML 5, CSS 3, JavaScript, React e Boostrap 5 , [OpenWeatherMap API](https://openweathermap.org/api) e [Unleash api photos](https://unsplash.com/developers).**
+
+## Demonstração da aplicação wheather.
+>[acesse a aplicação aqui.](https://storied-pegasus-683f73.netlify.app/)
 
 ## 🚀 Funcionalidades
 
